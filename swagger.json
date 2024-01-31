@@ -1,0 +1,73 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Fleet Admin API",
+        "description": "Fleet Admin API",
+        "version": "2023-12-01"
+    },
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/fleet/admin/requeue": {
+            "post": {
+                "operationId": "requeue",
+                "parameters": [
+                    {
+                        "name": "queue",
+                        "in": "query",
+                        "description": "the DLQ queue name. 'async' or 'event'. async is the RP async's DLQ, 'event' is the event's subscription DLQ",
+                        "required": true,
+                        "type": "string",
+                        "enum": [ "async", "event"],
+                        "minLength": 1
+                    },
+                    {
+                        "name": "messageId",
+                        "in": "query",
+                        "description": "the message ID to requeue",
+                        "required": false,
+                        "type": "string",
+                        "minLength": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    },
+                    "500": {
+                        "description": "Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/Result"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Result": {
+            "type": "object",
+            "properties": {
+                "requeuedMessageCount": {
+                    "type": "integer",
+                    "description": "the number of messages successfully requeued"
+
+                },
+                "errorMessage": {
+                    "type": "string",
+                    "description": "the error message if any"
+                }
+            }
+        }
+    }
+}
